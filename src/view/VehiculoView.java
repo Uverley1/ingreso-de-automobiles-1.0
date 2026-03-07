@@ -1,10 +1,8 @@
 package view;
-
-import java.util.List;
 import java.util.Scanner;
-
 import model.Vehiculo;
 
+import dao.VehiculoDAO;
 
 public class VehiculoView  {
     private Scanner sc = new Scanner(System.in);
@@ -20,46 +18,52 @@ public class VehiculoView  {
         return sc.nextInt();
     }
     public Vehiculo leerDatosVehiculo(){
-        
-        sc.nextLine();
 
+    VehiculoDAO dao = new VehiculoDAO();
+    String placa;
+
+    do {
+
+        sc.nextLine();
+        System.out.print("Ingresa la placa: ");
+        placa = sc.nextLine();
+
+        if(dao.existeVehiculo(placa)){
+            System.out.println("⚠ La placa ya está registrada en la base de datos.");
+        }
+
+    } while(dao.existeVehiculo(placa));
+
+    System.out.print("Ingresa el modelo: ");
+    String modelo = sc.nextLine();
+
+    System.out.print("Ingresa la marca: ");
+    String marca = sc.nextLine();
+
+    return new Vehiculo(placa, marca, modelo);
+}
+
+    public Vehiculo leerPlaca(){
+        sc.nextLine();
         System.out.print("ingresa la placa: ");
         String placa = sc.nextLine();
-        
-        System.out.print("ingresa el modelo: ");
-        String modelo = sc.nextLine();
-        
-        System.out.print("ingresa la marca: ");
-        String marca = sc.nextLine();
-        
-        return new Vehiculo(placa, marca, modelo);
-
+        return new Vehiculo(placa, null, null);
     }
 
-    public void AgregarVehiculo(Vehiculo vehiculo) {
-        System.out.println("Placa: " + vehiculo.getPlaca());
-        System.out.println("Marca: " + vehiculo.getMarca());
-        System.out.println("Modelo: " + vehiculo.getModelo());
-    }
-
-    public void mostrarVehiculos(List<Vehiculo> vehiculos){
-        if(vehiculos.isEmpty()){
-            System.out.println("No hay vehiculos registrados.");
-        }
-        else{
-            for (Vehiculo v : vehiculos) {
+    public void mostrarVehiculos(VehiculoDAO vehiculoDAO){
+        for (Vehiculo v : vehiculoDAO.obtenerVehiculos()) {
             System.out.println("Placa: " + v.getPlaca());
             System.out.println("Marca: " + v.getMarca());
             System.out.println("Modelo: " + v.getModelo());
             System.out.println("-----------------------");
-            }
         }
     }
-
-    public String LeerPlacaEliminar(){
-        sc.nextLine();
-        System.out.print("Ingrese la placa del vehiculo a eliminar: ");
-        return sc.nextLine();
+    
+    public void salir(){
+            System.out.println("Saliendo del programa...");
+            System.exit(0);  
+  
     }
+
 
 }

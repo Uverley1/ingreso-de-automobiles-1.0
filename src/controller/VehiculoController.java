@@ -2,62 +2,44 @@ package controller;
 
 import view.VehiculoView;
 
-import java.util.ArrayList;
-
-import java.util.List;
-
-import model.Vehiculo;
+import dao.VehiculoDAO;
 
 public class VehiculoController {
     
     private VehiculoView view;
-    private List<Vehiculo> vehiculos;
-    
+    private VehiculoDAO vehiculoDAO;
+
     public VehiculoController(VehiculoView view){
         this.view = view;
-        this.vehiculos = new ArrayList<>();
+        this.vehiculoDAO = new VehiculoDAO();
     }
 
-    public void iniciar(){
-        int opcion;
+    public int iniciar(){
+        int option;
         do{
-            opcion = view.MostrarMenuLeerOpcion();
-            switch (opcion) {
+            option = view.MostrarMenuLeerOpcion();
+            switch (option) {
                 case 1:
-                    agregarVehiculo();
+                    vehiculoDAO.guardarVehiculo(view.leerDatosVehiculo());
                     break;
                 case 2:
-                    view.mostrarVehiculos(vehiculos);
+                    view.mostrarVehiculos(vehiculoDAO);
                     break;
                 case 3:
-                    EliminarVehiculo();
+                    vehiculoDAO.eliminarVehiculo(view.leerPlaca().getPlaca());
                     break;
-                case 4:
-                    System.out.println("0. Salir");
+                case 0:
+                    view.salir();
                     break;
                 
                     default:
                         System.out.println("Opcion Invalida");
 
             }
-        }while (opcion !=0);
-            
-    }
-    private void agregarVehiculo(){
-        Vehiculo v = view.leerDatosVehiculo();
-        vehiculos.add(v);
-        view.AgregarVehiculo(v);
-    }
-    private void EliminarVehiculo(){
-        String placa = view.LeerPlacaEliminar();
-        for (Vehiculo v : vehiculos) {
-            if (v.getPlaca().equals(placa)) {
-                vehiculos.remove(v);
-                System.out.println("Vehiculo con placa " + placa + " eliminado.");
-                return;
-            }
         }
-        System.out.println("Vehiculo con placa " + placa + " no encontrado.");
+        while (option !=0);
+        return option;
+            
     }
 
 }
